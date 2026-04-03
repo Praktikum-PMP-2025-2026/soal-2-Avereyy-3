@@ -1,0 +1,191 @@
+name: Autograding Tests
+
+on:
+  - push
+  - repository_dispatch
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Case 01 - contoh resmi
+        id: case-01
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 01 - contoh resmi
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "3 7 Orb 3 8 Rune 4 10 Lens 5 11"
+          expected-output: |-
+            MAX_VALUE 18
+            ITEM Orb
+            ITEM Rune
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 02 - pilih satu item terbaik
+        id: case-02
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 02 - pilih satu item terbaik
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "3 4 A 5 10 B 4 8 C 3 7"
+          expected-output: |-
+            MAX_VALUE 8
+            ITEM B
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 03 - semua item muat
+        id: case-03
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 03 - semua item muat
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "3 20 A 3 4 B 4 5 C 5 6"
+          expected-output: |-
+            MAX_VALUE 15
+            ITEM A
+            ITEM B
+            ITEM C
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 04 - tie value pilih bobot lebih kecil
+        id: case-04
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 04 - tie value pilih bobot lebih kecil
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "3 6 A 6 10 B 3 5 C 2 5"
+          expected-output: |-
+            MAX_VALUE 10
+            ITEM B
+            ITEM C
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 05 - tie value tie bobot pilih nama leksikografis
+        id: case-05
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 05 - tie value tie bobot pilih nama leksikografis
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "4 4 Beta 2 5 Alpha 2 5 Delta 2 5 Gamma 2 5"
+          expected-output: |-
+            MAX_VALUE 10
+            ITEM Alpha
+            ITEM Beta
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 06 - tidak ada yang muat
+        id: case-06
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 06 - tidak ada yang muat
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "3 1 A 2 10 B 3 20 C 4 30"
+          expected-output: "MAX_VALUE 0"
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 07 - satu item nol bobot tidak ada
+        id: case-07
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 07 - kombinasi optimal tiga item
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "5 10 A 6 30 B 3 14 C 4 16 D 2 9 E 5 20"
+          expected-output: |-
+            MAX_VALUE 46
+            ITEM A
+            ITEM C
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 08 - leksikografis setelah sort nama
+        id: case-08
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 08 - leksikografis setelah sort nama
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "4 6 Zeta 3 5 Alpha 3 5 Beta 3 5 Gamma 3 5"
+          expected-output: |-
+            MAX_VALUE 10
+            ITEM Alpha
+            ITEM Beta
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 09 - pilih kombinasi bukan greedy
+        id: case-09
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 09 - pilih kombinasi bukan greedy
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "4 10 A 9 19 B 6 12 C 4 8 D 5 11"
+          expected-output: |-
+            MAX_VALUE 20
+            ITEM B
+            ITEM C
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Case 10 - tie value tiga opsi
+        id: case-10
+        uses: classroom-resources/autograding-io-grader@v1
+        with:
+          test-name: Case 10 - tie value tiga opsi
+          setup-command: gcc -std=c11 -O2 -Wall -Wextra -o soal2 soal2.c
+          command: ./soal2
+          input: "5 5 C 5 10 A 2 5 B 3 5 D 4 8 E 1 2"
+          expected-output: |-
+            MAX_VALUE 10
+            ITEM A
+            ITEM B
+          comparison-method: exact
+          timeout: 2
+          max-score: 10
+
+      - name: Autograding Reporter
+        uses: classroom-resources/autograding-grading-reporter@v1
+        env:
+          CASE-01_RESULTS: "${{steps.case-01.outputs.result}}"
+          CASE-02_RESULTS: "${{steps.case-02.outputs.result}}"
+          CASE-03_RESULTS: "${{steps.case-03.outputs.result}}"
+          CASE-04_RESULTS: "${{steps.case-04.outputs.result}}"
+          CASE-05_RESULTS: "${{steps.case-05.outputs.result}}"
+          CASE-06_RESULTS: "${{steps.case-06.outputs.result}}"
+          CASE-07_RESULTS: "${{steps.case-07.outputs.result}}"
+          CASE-08_RESULTS: "${{steps.case-08.outputs.result}}"
+          CASE-09_RESULTS: "${{steps.case-09.outputs.result}}"
+          CASE-10_RESULTS: "${{steps.case-10.outputs.result}}"
+        with:
+          runners: case-01,case-02,case-03,case-04,case-05,case-06,case-07,case-08,case-09,case-10
