@@ -21,13 +21,28 @@ int bestCount = 0;
 
 // helper: sort string array
 int cmpstr(const void *a, const void *b) {
-    return strcmp((char *)a, (char *)b);
+    const char (*sa)[101] = a;
+    const char (*sb)[101] = b;
+    return strcmp(*sa, *sb);
 }
 
-// compare lexicographically
+void copyAndSort(char dest[][101], char src[][101], int count) {
+    for (int i = 0; i < count; i++) {
+        strcpy(dest[i], src[i]);
+    }
+    qsort(dest, count, sizeof(dest[0]), cmpstr);
+}
+
+// compare lexicographically after alphabetical sort
 int isLexSmaller(char a[][101], int na, char b[][101], int nb) {
+    char sortedA[MAXN][101];
+    char sortedB[MAXN][101];
+
+    copyAndSort(sortedA, a, na);
+    copyAndSort(sortedB, b, nb);
+
     for (int i = 0; i < na && i < nb; i++) {
-        int cmp = strcmp(a[i], b[i]);
+        int cmp = strcmp(sortedA[i], sortedB[i]);
         if (cmp != 0) return cmp < 0;
     }
     return na < nb;
@@ -47,8 +62,7 @@ void dfs(int idx, int totalW, int totalV, char chosen[][101], int count) {
         bestWeight = totalW;
         bestCount = count;
 
-        for (int i = 0; i < count; i++)
-            strcpy(bestSet[i], chosen[i]);
+        copyAndSort(bestSet, chosen, count);
     }
 
     if (idx == N) return;
